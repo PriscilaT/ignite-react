@@ -115,7 +115,7 @@ export function App() {
 import { App } from './App'
 ```
 
-* Executa o webpack com o comendo
+* Executa o webpack com o comando
 
 ```cmd
 yarn webpack
