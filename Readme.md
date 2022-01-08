@@ -46,12 +46,14 @@ ou com npm
  ```
  * Criar um arquivo chamado babel.config.js
 ```js
- module.exports = {
-    presets: [
-        '@babel/preset-env',
-        '@babel/preset-react'
-    ]
-}
+   module.exports = {
+      presets: [
+         '@babel/preset-env',
+         ['@babel/preset-react', {
+               runtime: 'automatic'}
+         ]
+      ]
+   }
 ```
 
 Para entender o html dentro de index.js
@@ -75,6 +77,7 @@ Configurar o webpack, ele trata e converte arquivos de outros tipo para um que o
    const path = require('path')
 
    module.exports = {
+      mode: 'development',
       entry: path.resolve(_dirname, 'src', 'index.jsx'),
       output:{
          path: path.resolve(_dirname, 'dist'),
@@ -120,4 +123,93 @@ import { App } from './App'
 ```cmd
 yarn webpack
 ```
-teste
+ ##### Estrutura do React
+
+ É uma biblioteca que cria toda a interface da aplicação atraves do javascript
+  * Toda a estrutura  construida dentro da div root em index.html dentro do body e importa o buble.js
+
+  ```js
+  <body>
+    <div id="root"></div>
+    <script src="dist/bundle.js"></script>
+   </body>
+
+  ```
+
+  * Dentro do index.jsx
+
+  ```js
+   import { render } from 'react-dom';
+   import { App } from './App'
+
+   render(<App />, document.getElementById('root'))
+  ```
+  * No terminal, roda 
+   ```cmd
+   yarn webpack
+  ```
+
+  ##### Servindo html estático
+
+  * Para não precisar do bundle, tira isso do index.html
+  ```js
+   <script src="../dist/bundle.js"></script>
+  ```
+  e instala essa dependencia webpack como dependencia de desenvolvedor
+
+  ```cmd
+   yarn add html-webpack-plugin -D
+  ```
+ e importa no webpack.config.js
+ ```js
+   const HtmlWebpackPlugin = require('html-webpack-plugin')
+
+   plugins: [
+      new HtmlWebpackPlugin({
+         template: path.resolve(__dirname, 'public'. 'index.html')
+      })
+   ]
+  ```
+
+  ##### Webpack Dev Server
+
+ * Para não precisar ficar rodando yarn webpack toda vez que fizer uma alteração, instala:
+
+ ```cmd
+   yarn add webpack-dev-server -D
+  ```
+
+  e no webpack.config.js
+ ```js
+   devServer: {
+      contentBase: path.resolve(__dirname, 'public')
+   },
+ ```
+
+ depois disso, só precisa rodar 
+ ```cmd
+   yarn webpack serve
+ ```
+
+ * Nessa parte deu um erro, resolvi trocando: contentBase
+ ```js
+   devServer: {
+      contentBase: path.resolve(__dirname, 'public')
+   },
+ ```
+ por : static
+ ```js
+   devServer: {
+      static: path.resolve(__dirname, 'public')
+   },
+ ```
+
+ ##### Utilizando Source Maps
+
+ * Serve para vizualizar o código original, mesmo quando todo o código que estamos usando está no dist
+ Útil para quando tiver programando e der um erro e você quiser inspecionar a página (debugar)
+
+Colocando em webpack.config.js embaixo do mode:
+ ```js
+   devtool: 'eval-source-map',
+ ```
