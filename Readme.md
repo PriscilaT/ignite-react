@@ -213,3 +213,81 @@ Colocando em webpack.config.js embaixo do mode:
  ```js
    devtool: 'eval-source-map',
  ```
+
+ ##### Ambiente dev e produção
+
+ * Definir variáveis de ambiente para agir diferente, dependendo se estou em ambiente de deesenvolvimento ou produção. Em webpack.config.js
+ ```js
+   const isDevelopment = process.env.NODE_ENV !== 'production';
+
+   module.exports = {
+      mode: isDevelopment ? 'development' : 'production',
+      devtool: isDevelopment ? 'eval-source-map' : 'source-map',
+ ```
+
+ Criar a variável de ambiente NODE_ENV. No linux e no mac, isso funciona, no Win é diferente.
+
+ ```cmd
+   NODE_ENV=production yarn webpack
+ ```
+
+ Para executar isso independente do sistema operacional:
+
+ No package.json define um script,
+
+  ```js
+   "scripts":{
+    "dev": "webpack serve",
+    "build": "cross-env NODE_ENV=production webpack"
+  },
+ ```
+
+ e instala no terminal essa dependência.
+
+ ```cmd
+   yarn add cross-env -D
+ ```
+
+ Então agora, se eu quiser executar o projeto para ambiente de desenvolvimento eu coloco no terminal:
+
+  ```cmd
+   yarn dev
+ ```
+
+ e para ambiente de produção:
+
+ ```cmd
+   yarn build
+ ```
+
+##### Importando o CSS e Utilizando o SASS
+(vantagem do sass, encadeamento)
+
+ * Importa no terminal:
+
+ ```cmd
+   yarn add style-loader css-loader -D
+   yarn add sass-loader -D
+   yarn add node-sass -D
+ ```
+
+ * Cria uma pasta chamada style dentro do src, e dentro dessa pasta cria um arquivo global.scss, por exemplo.
+ Para importar no App.jxs:
+
+ ```js
+ import './style/global.scss';
+ ```
+
+ Para que o react entendo css (que não pe js), precisa criar uma nova regra no webpack.config.js 
+
+  ```js
+   {
+      test: /\.scss$/,
+      exclude: /node_modules/,
+      use: ['style-loader', 'css-loader', 'sass-loader'],
+   }
+ ```
+ 
+ 
+
+
