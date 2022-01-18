@@ -288,6 +288,71 @@ Colocando em webpack.config.js embaixo do mode:
    }
  ```
  
- 
+ ## Conceitos importantes de React.js
+
+ ##### Componentes
+ São como as tags em HTML. Uma forma de organizar separando em pedaços, os componentes, para formar algo maior.
+ É uma função, que devolve um html. O padrão é: um compponente por arquivo e começar com letra maiuscula.
+
+ Quando tem algo repetindo, faz sentido criar um componente para encapsular aquilo.
+
+ Dentro de src cria uma pasta chamada components, e dentro de components cria RepositoryList
+ A estrutura de um componente é pareceida com o seguinte:
+
+ ```js
+   export function RepositoryList() {
+      return(
+         <section className="repository-list">
+               <h1>Lista de repositórios</h1>
+
+         </section>
+      )
+   }
+ ```
+ Importa no App.jsx
+ ```js
+   import { RepositoryList } from './components/RepositoryList';
+   import './style/global.scss';
+
+   export function App() {
+      return <RepositoryList />
+   }
+```
+
+##### Propriedades
+Faz parte do código se comportar de maneira diferente.
+Fazendo um nome componente chamado RepositoryItem e importando ele no RepositoryList podemos ter um exemplo.
+
+Com isso, o repositório pai (RepositoryList) pode enviar informações para o repositório filho (RepositoryItem)
+
+```js
+   import { RepositoryItem } from "./RepositoryItem";
+
+   <RepositoryItem repository="unform2"/>
+   <RepositoryItem />
+   <RepositoryItem />
+
+```
+
+Para acessar essa informação no RepositoryItem, basta receber na função o argumento "props", onde fica tudo que aquele componente recebe, mas para acessar uma propriedade especifica coloca {props.repository}
+
+```js
+   export function RepositoryItem(props) {
+    return (
+      <li>
+         <strong>{props.repository}</strong>
+         <p>Forms in React</p>
+
+         <a href="">
+               Acessar repositório
+         </a>
+      </li>
+   )
+}
+
+```
+
+###### Anotações
+ * Para colocar variáveis dentro do html usa {}
 
 
