@@ -351,8 +351,125 @@ Para acessar essa informação no RepositoryItem, basta receber na função o ar
 }
 
 ```
-
 ###### Anotações
  * Para colocar variáveis dentro do html usa {}
+ * Renderizar é o ato de um componente ser exibido em tela
+
+##### Estado do componente
+
+Cria um arquivo chamado Counter.jsx
+
+Rederiza no App.jsx, com fragment, pois quando tem dois componentes juntos, eles precisam estar entre uma div ou fragment
+
+```js
+<>
+   <RepositoryList />
+   <Counter />
+</>
+```
+Para começar essa ideia de estado com um botão de incrementar, cria uma função no Counter.jsx
 
 
+``` js
+export function Counter() {
+    let counter = 0;
+
+    function increment() {
+        counter += 1;
+    }
+    return (
+        <div>
+            <h2>{counter}</h2>
+            <button type="button" onClick={increment}>
+                Increment
+            </button>
+        </div>
+    );
+}
+```
+
+Mas isso ainda não funciona porque o react por padrão não fica monitorando se as variáveis são alteradas.
+O react monitora apenas a "variável estado" e quando essa muda, ele rederiza todas de novo.
+
+Conhecido como "hook" ou "gancho" 
+```js
+   import { useState } from "react";
+
+   export function Counter() {
+      const [counter, setCounter] = useState(0);
+
+      function increment() {
+         setCounter (counter + 1);
+      }
+      return (
+         <div>
+               <button type="button" onClick={increment}>
+                  <h2>{counter}</h2>
+               </button>
+         </div>
+      );
+   }
+```
+
+##### Imutabilidade do react
+
+Um conceito que existe no estado do componente.
+Prevê que uma variável não vai ter seu valor alterado ou receber um novo valor
+
+```js
+ 
+   setCounter (counter + 1);
+      
+```
+
+Por isso usamos o setCounter, para criar um novo com o valor anterior e o novo valor.
+
+##### Fast Refresh do react
+
+Caso eu mude o nome do botão a quantidade de clicks volta para 0, caso eu não queria isso posso usar o fast refresh webpack, ou seja, serve para manter o estado do componente
+
+Instala no terminal
+
+```js
+   yarn add -D @pmmmwh/react-refresh-webpack-plugin react-refresh
+```
+
+E no webpack.config.js importa 
+
+```
+const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
+
+devServer: {
+   static: path.resolve(__dirname, 'public'),
+   hot: true,
+},
+
+plugins: [
+   isDevelopment && new ReactRefreshWebpackPlugin,
+   new HtmlWebpackPlugin({
+      template: path.resolve(__dirname, 'public', 'index.html')
+   })
+].filter(Boolean),
+module: {
+   rules: [
+      {
+            test: /\.jsx$/,
+            exclude: /node_modules/,
+            use: {
+               loader: 'babel-loader',
+               options: {
+                  plugins: [
+                        isDevelopment && require.resolve('react-refresh/babel')
+                  ].filter(Boolean)
+               }
+            },
+      },
+      {
+            test: /\.scss$/,
+            exclude: /node_modules/,
+            use: ['style-loader', 'css-loader', 'sass-loader'],
+      },
+   ],
+}
+
+```
